@@ -1,135 +1,107 @@
-local map = vim.keymap.set
+-- Set <space> as the leader key
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
 
-map("i", "<C-b>", "<ESC>^i", { desc = "Move Beginning of line" })
-map("i", "<C-e>", "<End>", { desc = "Move End of line" })
-map("i", "<C-h>", "<Left>", { desc = "Move Left" })
-map("i", "<C-l>", "<Right>", { desc = "Move Right" })
-map("i", "<C-j>", "<Down>", { desc = "Move Down" })
-map("i", "<C-k>", "<Up>", { desc = "Move Up" })
+-- set C-c to Esc
+vim.keymap.set("i", "<C-c>", "<Esc>")
 
-map("n", "<Esc>", "<cmd>noh<CR>", { desc = "General Clear highlights" })
+-- Map Ctrl + s to write buffer
+vim.keymap.set("n", '<C-s>', '<Cmd>write<CR>', { nowait = true, silent = true })
+vim.keymap.set("i", '<C-s>', '<Cmd>write<CR>', { nowait = true, silent = true })
 
-map("n", "<C-h>", "<C-w>h", { desc = "Switch Window left" })
-map("n", "<C-l>", "<C-w>l", { desc = "Switch Window right" })
-map("n", "<C-j>", "<C-w>j", { desc = "Switch Window down" })
-map("n", "<C-k>", "<C-w>k", { desc = "Switch Window up" })
+-- set pv to Explorer
+vim.keymap.set("n", "<leader>e", vim.cmd.Ex)
 
-map("n", "<C-s>", "<cmd>w<CR>", { desc = "File Save" })
-map("n", "<C-c>", "<cmd>%y+<CR>", { desc = "File Copy whole" })
+-- set C-a to select all
+vim.keymap.set("n", "<C-a>", "ggVG")
 
-map("n", "<leader>n", "<cmd>set nu!<CR>", { desc = "Toggle Line number" })
-map("n", "<leader>nn", "<cmd>set rnu!<CR>", { desc = "Toggle Relative number" })
-map("n", "<leader>ch", "<cmd>NvCheatsheet<CR>", { desc = "Toggle NvCheatsheet" })
+-- close windows
+vim.keymap.set("n", "<leader>q", "<C-w>q")
 
--- global lsp mappings
-map("n", "<leader>fm", function()
-  vim.lsp.buf.format { async = true }
-end, { desc = "Lsp formatting" })
+-- Set to true if you have a Nerd Font installed
+vim.g.have_nerd_font = true
 
-map("n", "<leader>lf", vim.diagnostic.open_float, { desc = "Lsp floating diagnostics" })
-map("n", "[d", vim.diagnostic.goto_prev, { desc = "Lsp prev diagnostic" })
-map("n", "]d", vim.diagnostic.goto_next, { desc = "Lsp next diagnostic" })
-map("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Lsp diagnostic loclist" })
+-- Make line numbers default
+vim.opt.number = true
 
--- tabufline
-map("n", "<leader>b", "<cmd>enew<CR>", { desc = "Buffer New" })
+-- You can also add relative line numbers, for help with jumping.
+vim.opt.relativenumber = true
 
-map("n", "<tab>", function()
-  require("nvchad.tabufline").next()
-end, { desc = "Buffer Goto next" })
+-- Enable mouse mode, can be useful for resizing splits for example!
+vim.opt.mouse = 'a'
 
-map("n", "<S-tab>", function()
-  require("nvchad.tabufline").prev()
-end, { desc = "Buffer Goto prev" })
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
 
-map("n", "<leader>x", function()
-  require("nvchad.tabufline").close_buffer()
-end, { desc = "Buffer Close" })
+vim.opt.smartindent = true
 
--- Comment
-map("n", "<leader>/", function()
-  require("Comment.api").toggle.linewise.current()
-end, { desc = "Comment Toggle" })
+vim.opt.wrap = false
 
-map(
-  "v",
-  "<leader>/",
-  "<ESC><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>",
-  { desc = "Comment Toggle" }
-)
+vim.opt.swapfile = false
+vim.opt.backup = false
+vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
+vim.opt.undofile = true
 
--- nvimtree
-map("n", "<C-n>", "<cmd>NvimTreeToggle<CR>", { desc = "Nvimtree Toggle window" })
-map("n", "<leader>e", "<cmd>NvimTreeFocus<CR>", { desc = "Nvimtree Focus window" })
+vim.opt.hlsearch = false
+vim.opt.incsearch = true
 
--- telescope
-map("n", "<leader>fw", "<cmd>Telescope live_grep<CR>", { desc = "Telescope Live grep" })
-map("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "Telescope Find buffers" })
-map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "Telescope Help page" })
+vim.opt.termguicolors = true
 
-map("n", "<leader>fo", "<cmd>Telescope oldfiles<CR>", { desc = "Telescope Find oldfiles" })
-map("n", "<leader>fz", "<cmd>Telescope current_buffer_fuzzy_find<CR>", { desc = "Telescope Find in current buffer" })
-map("n", "<leader>cm", "<cmd>Telescope git_commits<CR>", { desc = "Telescope Git commits" })
-map("n", "<leader>gt", "<cmd>Telescope git_status<CR>", { desc = "Telescope Git status" })
-map("n", "<leader>pt", "<cmd>Telescope terms<CR>", { desc = "Telescope Pick hidden term" })
-map("n", "<leader>th", "<cmd>Telescope themes<CR>", { desc = "Telescope Nvchad themes" })
-map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Telescope Find files" })
-map(
-  "n",
-  "<leader>fa",
-  "<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>",
-  { desc = "Telescope Find all files" }
-)
+vim.opt.scrolloff = 8
+vim.opt.signcolumn = "yes"
+vim.opt.isfname:append("@-@")
 
--- terminal
-map("t", "<C-x>", "<C-\\><C-N>", { desc = "Terminal Escape terminal mode" })
+vim.opt.colorcolumn = "120"
 
--- new terminals
-map("n", "<leader>h", function()
-  require("nvchad.term").new { pos = "sp", size = 0.3 }
-end, { desc = "Terminal New horizontal term" })
+-- Don't show the mode, since it's already in status line
+vim.opt.showmode = false
 
-map("n", "<leader>v", function()
-  require("nvchad.term").new { pos = "vsp", size = 0.3 }
-end, { desc = "Terminal New vertical window" })
+-- Sync clipboard between OS and Neovim.
+--  Remove this option if you want your OS clipboard to remain independent.
+vim.opt.clipboard = 'unnamedplus'
 
--- toggleable
-map({ "n", "t" }, "<A-v>", function()
-  require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm", size = 0.3 }
-end, { desc = "Terminal Toggleable vertical term" })
+-- Enable break indent
+vim.opt.breakindent = true
 
-map({ "n", "t" }, "<A-h>", function()
-  require("nvchad.term").toggle { pos = "sp", id = "htoggleTerm", size = 0.3 }
-end, { desc = "Terminal New horizontal term" })
+-- Save undo history
+vim.opt.undofile = true
 
-map({ "n", "t" }, "<A-i>", function()
-  require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
-end, { desc = "Terminal Toggle Floating term" })
+-- Case-insensitive searching UNLESS \C or capital in search
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
-map("t", "<ESC>", function()
-  local win = vim.api.nvim_get_current_win()
-  vim.api.nvim_win_close(win, true)
-end, { desc = "Terminal Close term in terminal mode" })
+-- Decrease update time
+vim.opt.updatetime = 250
+vim.opt.timeoutlen = 300
 
--- whichkey
-map("n", "<leader>wK", "<cmd>WhichKey <CR>", { desc = "Whichkey all keymaps" })
+-- Configure how new splits should be opened
+vim.opt.splitright = true
+vim.opt.splitbelow = true
 
-map("n", "<leader>wk", function()
-  vim.cmd("WhichKey " .. vim.fn.input "WhichKey: ")
-end, { desc = "Whichkey query lookup" })
+-- Show which line your cursor is on
+vim.opt.cursorline = false
 
--- blankline
-map("n", "<leader>cc", function()
-  local config = { scope = {} }
-  config.scope.exclude = { language = {}, node_type = {} }
-  config.scope.include = { node_type = {} }
-  local node = require("ibl.scope").get(vim.api.nvim_get_current_buf(), config)
+-- Minimal number of screen lines to keep above and below the cursor.
+vim.opt.scrolloff = 15
 
-  if node then
-    local start_row, _, end_row, _ = node:range()
-    if start_row ~= end_row then
-      vim.api.nvim_win_set_cursor(vim.api.nvim_get_current_win(), { start_row + 1, 0 })
-      vim.api.nvim_feedkeys("_", "n", true)
-    end
-  end
-end, { desc = "Blankline Jump to current context" })
+-- Set highlight on search, but clear on pressing <Esc> in normal mode
+vim.opt.hlsearch = false
+-- vim.keymap.set('n', '<leader>nh', '<cmd>nohlsearch<CR>')
+
+-- Diagnostic keymaps
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
+vim.keymap.set('n', '<leader>dd', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
+vim.keymap.set('n', '<leader>df', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+
+-- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
+-- or just use <C-\><C-n> to exit terminal mode
+vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+
+-- Keybinds to make split navigation easier.
+vim.keymap.set('n', '<leader>h', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+vim.keymap.set('n', '<leader>l', '<C-w><C-l>', { desc = 'Move focus to the right window' })
+vim.keymap.set('n', '<leader>j', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
+vim.keymap.set('n', '<leader>k', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
